@@ -38,34 +38,50 @@ if __name__ == '__main__':
     dl = DataLoder.DataLoader()
     all_x_data = dl.normlized_data[:, 1:]
     all_y_data = dl.normlized_data[:, 0]
+    all_y_data = all_y_data.reshape([-1, 1])
 
     print(all_x_data.shape)
-    model = torch.nn.Sequential(torch.nn.Linear(9,20),
+    model = torch.nn.Sequential(torch.nn.Linear(9, 20),
                                 torch.nn.ReLU(),
-                                torch.nn.Linear(20,10),
+                                torch.nn.Linear(20, 10),
                                 torch.nn.ReLU(),
-                                torch.nn.Linear(10,1),
+                                torch.nn.Linear(10, 1),
                                 )
     loss_fn = torch.nn.MSELoss(size_average=False)
 
+    x_torch = FloatTensor(all_x_data)
+    y_torch = FloatTensor(all_y_data)
+
     x = Variable(FloatTensor(all_x_data).cuda())
-    y = Variable(FloatTensor(all_y_data.reshape(-1,1)).cuda())
+    y = Variable(FloatTensor(all_y_data.reshape(-1, 1)).cuda(),
+                 requires_grad=False)
     x.cuda()
     y.cuda()
 
     model.cuda()
     loss_fn.cuda()
 
-    learning_rate = 1e-4
-    for t in range(1000):
-        y_pred = model(x)
-        print(y_pred.data.shape)
-        print(y.data.shape)
 
-        loss = loss_fn(y,y_pred)
-        print(t,loss.data[0])
+    loss_array = np.zeros(1000000)
+    optimizer = torch.optim.Adam(model.parameters(),lr=1e-4)
+    # optimizer.cuda()
+    for t in range(loss_array.shape[0]):
+        y_pred = model(x)
+        # print(y_pred.data.shape)
+        # print(y.data.shape)
+
+        loss = loss_fn(y_pred, y)
+        print(t, loss.data[0])
+        loss_array[t] = loss.data[0]
         model.zero_grad()
         loss.backward()
-        for param in model.parameters():
-            param.data -= learning_rate*param.grad.data
+        # if(learning_rate>1e-6):
+        #     learning_rate *= 0.95
+        # for param in model.parameters():
+        #     param.data -= learning_rate * param.grad.data
+        optimizer.step()
 
+    plt.figure()
+    plt.plot(loss_array[:], '-*')
+    plt.grid()
+    plt.show()
