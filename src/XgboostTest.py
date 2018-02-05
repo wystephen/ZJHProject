@@ -29,3 +29,20 @@ import matplotlib.pyplot as plt
 
 import sklearn as sk
 import xgboost as xgb
+
+
+from src import DataLoder
+
+if __name__ == '__main__':
+     dl = DataLoder.DataLoader('/home/steve/Data/ZJHData/NO2_data.csv')
+
+     x = dl.data[:,1:]
+     y = dl.data[:,0].reshape([-1,1])
+
+     reg = xgb.XGBRegressor()
+
+     reg.fig(x,y)
+
+     print(sk.metrics.r2_score(y,reg.predict(x)))
+
+
