@@ -51,15 +51,20 @@ if __name__ == '__main__':
 
     print(all_x_data.shape)
     model = torch.nn.Sequential(torch.nn.Linear(9, 20),
-                                torch.nn.ReLU(),
+                                # torch.nn.ReLU(),
+                                torch.nn.Softsign(),
                                 torch.nn.Linear(20, 10),
-                                torch.nn.ReLU(),
+                                # torch.nn.ReLU(),
+                                torch.nn.BatchNorm1d(),
+                                torch.nn.Softsign(),
                                 torch.nn.Linear(10, 10),
-                                torch.nn.ReLU(),
+                                torch.nn.Softsign(),
                                 torch.nn.Linear(10, 10),
-                                torch.nn.ReLU(),
+                                # torch.nn.ReLU(),
+                                torch.nn.Softsign(),
                                 torch.nn.Linear(10, 10),
-                                torch.nn.ReLU(),
+                                # torch.nn.ReLU(),
+                                torch.nn.Softsign(),
                                 torch.nn.Linear(10, 1),
                                 )
     loss_fn = torch.nn.MSELoss(size_average=False)
