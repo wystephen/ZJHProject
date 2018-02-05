@@ -47,7 +47,8 @@ if __name__ == '__main__':
                                 torch.nn.ReLU(),
                                 torch.nn.Linear(20, 10),
                                 torch.nn.ReLU(),
-                                torch.nn.Dropout(),
+                                torch.nn.Linear(10,10),
+                                torch.nn.ReLU(),
                                 torch.nn.Linear(10, 1),
                                 )
     loss_fn = torch.nn.MSELoss(size_average=False)
@@ -66,9 +67,9 @@ if __name__ == '__main__':
 
 
     loss_array = np.zeros(1000000)
-    optimizer = torch.optim.Adam(model.parameters(),lr=1e-4)
-    optimizer = torch.optim.ASGD(model.parameters(),lr=1e-6)
-    optimizer = torch.optim.Adadelta(model.parameters())
+    optimizer = torch.optim.Adam(model.parameters())
+    # optimizer = torch.optim.ASGD(model.parameters(),lr=1e-6)
+    # optimizer = torch.optim.Adadelta(model.parameters())
     # optimizer = torch.optim.SGD(model.parameters(),lr=1e-6,momentum=0.1)
     # optimizer.cuda()
 

@@ -92,9 +92,9 @@ if __name__ == '__main__':
      # random_search = sk.model_selection.RandomizedSearchCV(reg,param_distributions=para_dist,
      #                                                       scoring=sk.metrics.make_scorer(sk.metrics.r2_score))
 
-     random_search = sk.model_selection.RandomizedSearchCV(reg,param_distributions=para_dist,
-                                                           n_iter=100,
-                                                           scoring=sk.metrics.make_scorer(sk.metrics.r2_score))
+     random_search = sk.model_selection.GridSearchCV(reg,param_grid=para_dist,
+                                                           scoring=sk.metrics.make_scorer(sk.metrics.r2_score),
+                                                     n_jobs=6)
                                                            # scoring=sk.metrics.r2_score)
      random_search.fit(x,y)
      report(random_search.cv_results_,n_top=10)
