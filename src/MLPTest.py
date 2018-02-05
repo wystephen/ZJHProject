@@ -34,24 +34,31 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 
+from visdom import Visdom
+
 from src import DataLoder
 
 if __name__ == '__main__':
+
+    vis = Visdom()
+    vis.text('hello word!')
+
     dl = DataLoder.DataLoader()
     all_x_data = dl.normlized_data[:, 1:]
     all_y_data = dl.normlized_data[:, 0]
     all_y_data = all_y_data.reshape([-1, 1])
+
 
     print(all_x_data.shape)
     model = torch.nn.Sequential(torch.nn.Linear(9, 20),
                                 torch.nn.ReLU(),
                                 torch.nn.Linear(20, 10),
                                 torch.nn.ReLU(),
-                                torch.nn.Linear(10,10),
+                                torch.nn.Linear(10, 10),
                                 torch.nn.ReLU(),
-                                torch.nn.Linear(10,10),
+                                torch.nn.Linear(10, 10),
                                 torch.nn.ReLU(),
-                                torch.nn.Linear(10,10),
+                                torch.nn.Linear(10, 10),
                                 torch.nn.ReLU(),
                                 torch.nn.Linear(10, 1),
                                 )
@@ -69,7 +76,6 @@ if __name__ == '__main__':
     model.cuda()
     loss_fn.cuda()
 
-
     loss_array = np.zeros(1000000)
     optimizer = torch.optim.Adam(model.parameters())
     # optimizer = torch.optim.ASGD(model.parameters(),lr=1e-6)
@@ -83,7 +89,7 @@ if __name__ == '__main__':
         # print(y.data.shape)
 
         loss = loss_fn(y_pred, y)
-        print(t, loss.data[0],metrics.r2_score(all_y_data,y_pred.cpu().data.numpy()))
+        print(t, loss.data[0], metrics.r2_score(all_y_data, y_pred.cpu().data.numpy()))
         loss_array[t] = loss.data[0]
         model.zero_grad()
         loss.backward()
