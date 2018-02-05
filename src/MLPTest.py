@@ -67,7 +67,9 @@ if __name__ == '__main__':
 
     loss_array = np.zeros(1000000)
     optimizer = torch.optim.Adam(model.parameters(),lr=1e-4)
-    optimizer = torch.optim.SGD(model.parameters(),lr=1e-6,momentum=0.1)
+    optimizer = torch.optim.ASGD(model.parameters(),lr=1e-6)
+    optimizer = torch.optim.Adadelta(model.parameters())
+    # optimizer = torch.optim.SGD(model.parameters(),lr=1e-6,momentum=0.1)
     # optimizer.cuda()
 
     for t in range(loss_array.shape[0]):
