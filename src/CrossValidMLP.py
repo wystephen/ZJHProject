@@ -55,7 +55,7 @@ if __name__ == '__main__':
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
           test_x.shape, test_y.shape)
-    t_batch_size = 6000
+    t_batch_size = train_x.shape[0]
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
@@ -126,9 +126,33 @@ if __name__ == '__main__':
         torch.nn.Linear(10, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10, 10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10, 10),
+        torch.nn.RReLU(),
         torch.nn.Linear(10, 1)
 
     )
+    # model = torch.nn.Sequential(torch.nn.Linear(8, 20),
+    #                             # torch.nn.ReLU(),
+    #                             torch.nn.Softsign(),
+    #                             torch.nn.Linear(20, 10),
+    #                             torch.nn.BatchNorm1d(10),
+    #                             torch.nn.Softsign(),
+    #                             torch.nn.Linear(10, 10),
+    #                             torch.nn.BatchNorm1d(10),
+    #                             torch.nn.Softsign(),
+    #                             torch.nn.Linear(10, 10),
+    #                             torch.nn.BatchNorm1d(10),
+    #                             # torch.nn.ReLU(),
+    #                             torch.nn.Softsign(),
+    #                             torch.nn.Linear(10, 10),
+    #                             torch.nn.BatchNorm1d(10),
+    #                             # torch.nn.ReLU(),
+    #                             torch.nn.Softsign(),
+    #                             torch.nn.Linear(10, 1),
+    #                             )
     loss_fn = torch.nn.MSELoss(size_average=False)
 
     model.cuda()
