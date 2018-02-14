@@ -105,28 +105,28 @@ if __name__ == '__main__':
     #                             torch.nn.Linear(10, 1)
     #                             )
     model = torch.nn.Sequential(
-        torch.nn.Linear(8,10),
+        torch.nn.Linear(8, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
-        torch.nn.Linear(10,10),
+        torch.nn.Linear(10, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
-        torch.nn.Linear(10,10),
+        torch.nn.Linear(10, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
-        torch.nn.Linear(10,10),
+        torch.nn.Linear(10, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
-        torch.nn.Linear(10,10),
+        torch.nn.Linear(10, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
-        torch.nn.Linear(10,10),
+        torch.nn.Linear(10, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
-        torch.nn.Linear(10,10),
+        torch.nn.Linear(10, 10),
         torch.nn.RReLU(),
         torch.nn.BatchNorm1d(10),
-        torch.nn.Linear(10,1)
+        torch.nn.Linear(10, 1)
 
     )
     loss_fn = torch.nn.MSELoss(size_average=False)
@@ -143,7 +143,7 @@ if __name__ == '__main__':
             # print(i_batch)
             b_x, b_y = sample_batched
             b_x = Variable(b_x).cuda()
-            b_y = Variable(b_y,requires_grad=False).cuda()
+            b_y = Variable(b_y, requires_grad=False).cuda()
             # print(b_x.shape,b_y.shape)
             y_pre = model(b_x)
             loss = loss_fn(y_pre, b_y)
