@@ -47,6 +47,8 @@ if __name__ == '__main__':
     all_x_data = dl.normlized_data[:, 1:]
     all_y_data = dl.normlized_data[:, 0]
     all_y_data = all_y_data.reshape([-1, 1])
+    print(dl.normlized_data.shape)
+    print(all_x_data.shape,all_y_data.shape)
 
 
     print(all_x_data.shape)

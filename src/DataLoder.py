@@ -67,7 +67,7 @@ class ZJHDataset:
                                                  test_size=test_rate
                                                  )
         train_x, valid_x, train_y,valid_y = train_test_split(
-            tvx[:,1:],tvx[:,0],
+            tvx,tvy,
             shuffle=True,
             test_size=valid_rate/(1-test_rate)
         )
@@ -87,10 +87,13 @@ if __name__ == '__main__':
     plt.grid()
     plt.figure()
     plt.title('normlized data')
-    for i in range(1,dl.data.shape[1]):
+    for i in range(1, dl.data.shape[1]):
         plt.plot(dl.normlized_data[:,i],label=str(i))
     plt.legend()
     plt.grid()
+    tx,ty,vx,vy,testx,testy = dl.getTrainValidTest(0.9,0.05,0.05)
+    print(dl.normlized_data.shape)
+    print(tx.shape,ty.shape)
 
 
     plt.show()

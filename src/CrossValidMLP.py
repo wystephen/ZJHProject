@@ -55,7 +55,7 @@ if __name__ == '__main__':
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
           test_x.shape, test_y.shape)
-    t_batch_size = 5000
+    t_batch_size = train_x.shape[0]
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
@@ -72,15 +72,15 @@ if __name__ == '__main__':
     test_x = Variable(FloatTensor(test_x)).cuda()
     test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
 
-    model = torch.nn.Sequential(torch.nn.Linear(7, 10),
+    model = torch.nn.Sequential(torch.nn.Linear(8, 10),
                                 torch.nn.PReLU(),
+                                torch.nn.BatchNorm1d(10),
+
                                 torch.nn.Linear(10, 20),
                                 torch.nn.PReLU(),
                                 torch.nn.Linear(20, 20),
                                 torch.nn.PReLU(),
                                 torch.nn.Linear(20, 40),
-                                torch.nn.PReLU(),
-                                torch.nn.Linear(40, 40),
                                 torch.nn.PReLU(),
                                 torch.nn.Linear(40, 20),
                                 torch.nn.PReLU(),
@@ -88,10 +88,8 @@ if __name__ == '__main__':
                                 torch.nn.PReLU(),
                                 torch.nn.Linear(20, 10),
                                 torch.nn.PReLU(),
-                                # torch.nn.ReLU(),
                                 torch.nn.Linear(10, 1)
                                 )
-
     loss_fn = torch.nn.MSELoss(size_average=False)
 
     model.cuda()
@@ -106,7 +104,7 @@ if __name__ == '__main__':
             # print(i_batch)
             b_x, b_y = sample_batched
             b_x = Variable(b_x).cuda()
-            b_y = Variable(b_y).cuda()
+            b_y = Variable(b_y,requires_grad=False).cuda()
             # print(b_x.shape,b_y.shape)
             y_pre = model(b_x)
             loss = loss_fn(y_pre, b_y)
