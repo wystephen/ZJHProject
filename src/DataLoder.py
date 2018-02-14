@@ -61,15 +61,12 @@ class ZJHDataset:
 
         tvx,test_x,tvy,test_y = train_test_split(self.data[:,1:],self.data[:,0],
                                                  shuffle=True,
-                                                 test_rate=test_rate,
-                                                 random_state=40
+                                                 test_size=test_rate
                                                  )
         train_x, valid_x, train_y,valid_y = train_test_split(
             tvx[:,1:],tvx[:,0],
             shuffle=True,
-            test_rate=valid_rate/(1-test_rate),
-            random_state=40
-
+            test_size=valid_rate/(1-test_rate)
         )
 
         return train_x,train_y,valid_x,valid_y,test_x,test_y

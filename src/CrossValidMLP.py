@@ -25,7 +25,7 @@
 import torch
 from torch.autograd import Variable
 from torch import FloatTensor
-from torch.utils.data import Dataset,DataLoader
+from torch.utils.data import *
 
 from sklearn import metrics
 
@@ -38,14 +38,86 @@ from visdom import Visdom
 
 from src import DataLoder
 
-if __name__ == '__main__':
+from src import visualize
 
-    vis = Visdom()
-    vis.text('hello word!')
+if __name__ == '__main__':
+    # vis = Visdom()
+    # vis.text('hello word!')
+    visual = visualize.Visualizer(env='main')
 
     dl = DataLoder.ZJHDataset()
-    train_x, train_y,valid_x,valid_y,test_x,test_y = dl.getTrainValidTest()
+    train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.2)
 
+    t_batch_size = 100
 
+    train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
+                                            target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
+                              batch_size=t_batch_size,
+                              shuffle=True,
+                              num_workers=4)
+    train_x = Variable(FloatTensor(train_x)).cuda()
+    train_y = Variable(FloatTensor(train_y.reshape([-1,1]))).cuda()
+
+    valid_x = Variable(FloatTensor(valid_x)).cuda()
+    valid_y = Variable(FloatTensor(valid_y.reshape([-1, 1]))).cuda()
+    test_x = Variable(FloatTensor(test_x)).cuda()
+    test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
+
+    model = torch.nn.Sequential(torch.nn.Linear(9, 20),
+                                # torch.nn.ReLU(),
+                                torch.nn.Softsign(),
+                                torch.nn.Linear(20, 10),
+                                torch.nn.BatchNorm1d(10),
+                                torch.nn.Softsign(),
+                                torch.nn.Linear(10, 10),
+                                torch.nn.BatchNorm1d(10),
+                                torch.nn.Softsign(),
+                                torch.nn.Linear(10, 10),
+                                torch.nn.BatchNorm1d(10),
+                                # torch.nn.ReLU(),
+                                torch.nn.Softsign(),
+                                torch.nn.Linear(10, 10),
+                                torch.nn.BatchNorm1d(10),
+                                # torch.nn.ReLU(),
+                                torch.nn.Softsign(),
+                                torch.nn.Linear(10, 1),
+                                )
+
+    loss_fn = torch.nn.MSELoss(size_average=False)
+
+    model.cuda()
+    loss_fn.cuda()
+    loss_array = np.zeros(1000000)
+    optimizer = torch.optim.Adam(model.parameters())
+
+    for epoch in range(10000):
+        for i_batch, sample_batched in enumerate(train_loader):
+
+            # print(i_batch)
+            b_x , b_y = sample_batched
+            # print(b_x.shape,b_y.shape)
+            y_pre = model(b_x)
+            loss = loss_fn(y_pre,y)
+            print(epoch,i_batch,loss.data[0],
+                  metrics.r2_score(b_y.cpu().data.numpy(),
+                                   y_pre.cpu().data.numpy()))
+            model.zero_grad()
+            loss.backward()
+
+            optimizer.step()
+
+        model.eval()
+        train_r2 = metrics.r2_score(train_y.cpu().data.numpy(),
+                                    model(train_x).cpu().data.numpy())
+
+        valid_r2 = metrics.r2_score(valid_y.cpu().data.numpy(),
+                                    model(valid_x).cpu().data.numpy())
+
+        test_r2 = metrics.r2_score(test_y.cpu().data.numpy(),
+                                   model(test_x).cpu().data.numpy())
+        visual.plot('train_r2',train_r2)
+        visual.plot('valid_r2',valid_r2)
+        visual.plot('test_r2',test_r2)
+        model.train()
 
 
