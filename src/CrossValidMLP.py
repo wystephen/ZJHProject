@@ -41,10 +41,13 @@ from src import DataLoder
 from src import visualize
 import time
 
+from tensorboardX import SummaryWriter
+
 if __name__ == '__main__':
     # vis = Visdom()
     # vis.text('hello word!')
     visual = visualize.Visualizer(env='main' + time.asctime(time.localtime(time.time())))
+    tensor_board_writer = SummaryWriter()
 
     dl = DataLoder.ZJHDataset()
     train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.2)
@@ -61,9 +64,11 @@ if __name__ == '__main__':
                               num_workers=4)
     train_x = Variable(FloatTensor(train_x)).cuda()
     train_y = Variable(FloatTensor(train_y.reshape([-1, 1]))).cuda()
+    train_y_cpu = train_y.cpu().data.numpy()
 
     valid_x = Variable(FloatTensor(valid_x)).cuda()
     valid_y = Variable(FloatTensor(valid_y.reshape([-1, 1]))).cuda()
+    valid_y_cpu = valid_y.cpu().data.numpy()
     test_x = Variable(FloatTensor(test_x)).cuda()
     test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
 
@@ -75,8 +80,7 @@ if __name__ == '__main__':
                                 torch.nn.PReLU(),
                                 torch.nn.Linear(20, 40),
                                 torch.nn.PReLU(),
-                                torch.nn.Linear(40,40),
-                                # torch.nn.Dropout(),
+                                torch.nn.Linear(40, 40),
                                 torch.nn.PReLU(),
                                 torch.nn.Linear(40, 20),
                                 torch.nn.PReLU(),
@@ -115,11 +119,11 @@ if __name__ == '__main__':
             optimizer.step()
 
         model.eval()
-        train_r2 = metrics.r2_score(train_y.cpu().data.numpy(),
+        train_r2 = metrics.r2_score(train_y_cpu,
                                     model(train_x).cpu().data.numpy())
         train_loss = loss_fn(model(train_x), train_y).data[0]
 
-        valid_r2 = metrics.r2_score(valid_y.cpu().data.numpy(),
+        valid_r2 = metrics.r2_score(valid_y_cpu,
                                     model(valid_x).cpu().data.numpy())
         valid_loss = loss_fn(model(valid_x), valid_y).data[0]
 
@@ -134,5 +138,17 @@ if __name__ == '__main__':
               ',train loss:', train_loss,
               ',valid_r2:', valid_r2,
               ',valid loss:', valid_loss, '}')
+        tensor_board_writer.add_scalars('data/MSE',
+                                        {
+                                            'trainloss': train_loss,
+                                            'validloss': valid_loss},
+                                        epoch
+                                        )
+        tensor_board_writer.add_scalars('data/r2',
+                                        {
+                                            'trainr2': train_r2,
+                                            'validr2': valid_r2
+                                        },
+                                        epoch)
 
         model.train()
