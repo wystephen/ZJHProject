@@ -76,18 +76,18 @@ if __name__ == '__main__':
                                 torch.nn.ELU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 40),
-                                torch.nn.Dropout(0.8),
+                                torch.nn.Dropout(0.2),
                                 torch.nn.ELU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 40),
-                                torch.nn.Dropout(0.8),
+                                torch.nn.Dropout(0.2),
                                 torch.nn.ELU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 40),
                                 torch.nn.ELU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 20),
-                                torch.nn.Dropout(0.8),
+                                torch.nn.Dropout(0.2),
                                 torch.nn.ELU(),
                                 torch.nn.BatchNorm1d(20),
                                 torch.nn.Linear(20, 20),
@@ -115,6 +115,10 @@ if __name__ == '__main__':
     loss_array = np.zeros(1000000)
     optimizer = torch.optim.Adam(model.parameters())
     # optimizer = torch.optim.RMSprop(model.parameters())
+    max_train_r2 = 0.0
+    max_valid_r2 = 0.0
+    min_train_loss = 100000000.0
+    min_valid_loss = 100000000.0
 
     for epoch in range(10000):
         model.train()
@@ -150,9 +154,13 @@ if __name__ == '__main__':
         # visual.plot('test_r2',test_r2)
         visual.plot('train_loss', train_loss)
         visual.plot('valid_loss', valid_loss)
+        max_train_r2 = max(max_train_r2,train_r2)
+        max_valid_r2 = max(max_valid_r2,valid_r2)
         print(epoch, ':{', 'train r2:', train_r2,
+              ',max train r2:',max_train_r2,
               ',train loss:', train_loss,
               ',valid_r2:', valid_r2,
+              ',max valid r2:',max_valid_r2,
               ',valid loss:', valid_loss, '}')
         tensor_board_writer.add_scalars('data/MSE',
                                         {
