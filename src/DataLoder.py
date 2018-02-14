@@ -31,18 +31,20 @@ import matplotlib.pyplot as plt
 
 from torch.utils.data import Dataset, DataLoader
 
-class ZJHDataset(Dataset):
+from sklearn.preprocessing import *
+
+class ZJHDataset:
     def __init__(self, file_name='/home/steve/Data/ZJHData/source_data.csv'):
         self.file_name = file_name
         self.data = np.loadtxt(self.file_name,delimiter=',')
-        self.normlized_data = self.data-self.data.mean(axis=0)
-        self.normlized_data /= self.normlized_data.std(axis=0)
+        self.normlized_data = normalize(self.data)
+        print(self.normlized_data.mean(axis=1))
 
-    def __getitem__(self, index):
-        return self.data[index]
+    # def __getitem__(self, index):
+    #     return self.data[index]
 
-    def __len__(self):
-        return self.normlized_data.shape[0]
+    # def __len__(self):
+    #     return self.normlized_data.shape[0]
 
 if __name__ == '__main__':
     dl = DataLoader(file_name='/home/steve/Data/ZJHData/NO2_data.csv')
