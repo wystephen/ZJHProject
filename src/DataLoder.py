@@ -38,11 +38,14 @@ class ZJHDataset:
     def __init__(self, file_name='/home/steve/Data/ZJHData/NO2_data.csv'):
         self.file_name = file_name
         self.data = np.loadtxt(self.file_name,delimiter=',')
-        self.normlized_data = normalize(self.data)
-        print(self.data.mean(axis=1))
-        print(self.data.std(axis=1))
-        print(self.normlized_data.mean(axis=1))
-        print(self.normlized_data.std(axis=1))
+        # self.normlized_data = normalize(self.data)
+        tmp_mean = self.data.mean(axis=0)
+        self.normlized_data = self.data - tmp_mean
+        self.normlized_data = self.normlized_data / self.normlized_data.std(axis=0)
+        print(self.data.mean(axis=0))
+        print(self.data.std(axis=0))
+        print(self.normlized_data.mean(axis=0))
+        print(self.normlized_data.std(axis=0))
 
     # def __getitem__(self, index):
     #     return self.data[index]
@@ -77,11 +80,13 @@ if __name__ == '__main__':
     plt.plot(dl.data[:,0])
 
     plt.figure()
+    plt.title('data')
     for i in range(1,dl.data.shape[1]):
         plt.plot(dl.data[:,i],label=str(i))
     plt.legend()
     plt.grid()
     plt.figure()
+    plt.title('normlized data')
     for i in range(1,dl.data.shape[1]):
         plt.plot(dl.normlized_data[:,i],label=str(i))
     plt.legend()

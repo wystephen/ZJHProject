@@ -43,14 +43,14 @@ if __name__ == '__main__':
     vis = Visdom()
     vis.text('hello word!')
 
-    dl = DataLoder.DataLoader()
+    dl = DataLoder.ZJHDataset()
     all_x_data = dl.normlized_data[:, 1:]
     all_y_data = dl.normlized_data[:, 0]
     all_y_data = all_y_data.reshape([-1, 1])
 
 
     print(all_x_data.shape)
-    model = torch.nn.Sequential(torch.nn.Linear(9, 20),
+    model = torch.nn.Sequential(torch.nn.Linear(8, 20),
                                 # torch.nn.ReLU(),
                                 torch.nn.Softsign(),
                                 torch.nn.Linear(20, 10),
