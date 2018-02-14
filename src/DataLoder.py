@@ -63,10 +63,12 @@ class ZJHDataset:
             valid_rate = valid_rate / sum
             test_rate = test_rate / sum
 
-        tvx, test_x, tvy, test_y = train_test_split(self.normlized_data[:, 1:], self.normlized_data[:, 0],
-                                                    shuffle=True,
-                                                    test_size=test_rate
-                                                    )
+        tvx, test_x, tvy, test_y = \
+            train_test_split(self.normlized_data[:, 1:],
+                             self.normlized_data[:, 0],
+                             shuffle=True,
+                             test_size=test_rate
+                             )
         train_x, valid_x, train_y, valid_y = train_test_split(
             tvx, tvy,
             shuffle=True,
