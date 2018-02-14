@@ -44,6 +44,7 @@ if __name__ == '__main__':
     vis.text('hello word!')
 
     dl = DataLoder.ZJHDataset()
+    train_x, train_y,valid_x,valid_y,test_x,test_y = dl.getTrainValidTest()
 
 
 
