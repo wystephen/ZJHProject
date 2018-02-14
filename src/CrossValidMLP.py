@@ -39,16 +39,20 @@ from visdom import Visdom
 from src import DataLoder
 
 from src import visualize
+import time
 
 if __name__ == '__main__':
     # vis = Visdom()
     # vis.text('hello word!')
-    visual = visualize.Visualizer(env='main')
+    visual = visualize.Visualizer(env='main'+ time.time())
 
     dl = DataLoder.ZJHDataset()
     train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.2)
 
-    t_batch_size = 100
+    print(train_x.shape,train_y.shape,
+          valid_x.shape,valid_y.shape,
+          test_x.shape,test_y.shape)
+    t_batch_size = 5000
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
@@ -63,7 +67,7 @@ if __name__ == '__main__':
     test_x = Variable(FloatTensor(test_x)).cuda()
     test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
 
-    model = torch.nn.Sequential(torch.nn.Linear(9, 20),
+    model = torch.nn.Sequential(torch.nn.Linear(7, 20),
                                 # torch.nn.ReLU(),
                                 torch.nn.Softsign(),
                                 torch.nn.Linear(20, 10),
@@ -73,6 +77,7 @@ if __name__ == '__main__':
                                 torch.nn.BatchNorm1d(10),
                                 torch.nn.Softsign(),
                                 torch.nn.Linear(10, 10),
+                                torch.nn.Dropout(0.5),
                                 torch.nn.BatchNorm1d(10),
                                 # torch.nn.ReLU(),
                                 torch.nn.Softsign(),
@@ -95,9 +100,11 @@ if __name__ == '__main__':
 
             # print(i_batch)
             b_x , b_y = sample_batched
+            b_x = Variable(b_x).cuda()
+            b_y  = Variable(b_y).cuda()
             # print(b_x.shape,b_y.shape)
             y_pre = model(b_x)
-            loss = loss_fn(y_pre,y)
+            loss = loss_fn(y_pre,b_y)
             print(epoch,i_batch,loss.data[0],
                   metrics.r2_score(b_y.cpu().data.numpy(),
                                    y_pre.cpu().data.numpy()))
@@ -109,15 +116,20 @@ if __name__ == '__main__':
         model.eval()
         train_r2 = metrics.r2_score(train_y.cpu().data.numpy(),
                                     model(train_x).cpu().data.numpy())
+        train_loss = loss_fn(model(train_x),train_y).data[0]
 
         valid_r2 = metrics.r2_score(valid_y.cpu().data.numpy(),
                                     model(valid_x).cpu().data.numpy())
+        valid_loss = loss_fn(model(valid_x),valid_y).data[0]
 
-        test_r2 = metrics.r2_score(test_y.cpu().data.numpy(),
-                                   model(test_x).cpu().data.numpy())
+        # test_r2 = metrics.r2_score(test_y.cpu().data.numpy(),
+        #                            model(test_x).cpu().data.numpy())
         visual.plot('train_r2',train_r2)
         visual.plot('valid_r2',valid_r2)
-        visual.plot('test_r2',test_r2)
+        # visual.plot('test_r2',test_r2)
+        visual.plot('train_loss',train_loss)
+        visual.plot('valid_loss',valid_loss)
+
         model.train()
 
 

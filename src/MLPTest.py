@@ -96,7 +96,8 @@ if __name__ == '__main__':
         # print(y.data.shape)
 
         loss = loss_fn(y_pred, y)
-        print(t, loss.data[0], metrics.r2_score(all_y_data, y_pred.cpu().data.numpy()))
+        print(t, loss.data[0],
+              metrics.r2_score(all_y_data, y_pred.cpu().data.numpy()))
         loss_array[t] = loss.data[0]
         model.zero_grad()
         loss.backward()
