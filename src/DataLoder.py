@@ -46,6 +46,7 @@ class ZJHDataset:
         print(self.data.std(axis=0))
         print(self.normlized_data.mean(axis=0))
         print(self.normlized_data.std(axis=0))
+        # self.normlized_data = self.data
 
     # def __getitem__(self, index):
     #     return self.data[index]

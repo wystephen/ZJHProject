@@ -55,7 +55,7 @@ if __name__ == '__main__':
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
           test_x.shape, test_y.shape)
-    t_batch_size = 1000
+    t_batch_size = 6000
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
@@ -72,32 +72,63 @@ if __name__ == '__main__':
     test_x = Variable(FloatTensor(test_x)).cuda()
     test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
 
-    model = torch.nn.Sequential(torch.nn.Linear(8, 40),
-                                torch.nn.PReLU(),
-                                torch.nn.BatchNorm1d(40),
-                                torch.nn.Linear(40, 20),
-                                torch.nn.PReLU(),
-                                torch.nn.BatchNorm1d(20),
-                                torch.nn.Linear(20, 20),
-                                torch.nn.PReLU(),
-                                torch.nn.BatchNorm1d(20),
-                                torch.nn.Linear(20, 20),
-                                torch.nn.PReLU(),
-                                torch.nn.BatchNorm1d(20),
-                                torch.nn.Linear(20, 20),
-                                torch.nn.PReLU(),
-                                torch.nn.BatchNorm1d(20),
-                                torch.nn.Linear(20, 40),
-                                torch.nn.PReLU(),
-                                torch.nn.Linear(40, 20),
-                                torch.nn.PReLU(),
-                                torch.nn.BatchNorm1d(20),
-                                # torch.nn.Linear(20, 20),
-                                # torch.nn.PReLU(),
-                                torch.nn.Linear(20, 10),
-                                torch.nn.PReLU(),
-                                torch.nn.Linear(10, 1)
-                                )
+    # model = torch.nn.Sequential(torch.nn.Linear(8, 40),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(40),
+    #                             torch.nn.Linear(40, 40),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(40),
+    #                             torch.nn.Linear(40, 40),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(40),
+    #                             torch.nn.Linear(40, 40),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(40),
+    #                             torch.nn.Linear(40, 20),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(20),
+    #                             torch.nn.Linear(20, 20),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(20),
+    #                             torch.nn.Linear(20, 20),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(20),
+    #                             torch.nn.Linear(20, 40),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.Linear(40, 20),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.BatchNorm1d(20),
+    #                             torch.nn.Linear(20, 20),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.Linear(20, 10),
+    #                             torch.nn.ELU(),
+    #                             torch.nn.Linear(10, 1)
+    #                             )
+    model = torch.nn.Sequential(
+        torch.nn.Linear(8,10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10,10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10,10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10,10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10,10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10,10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10,10),
+        torch.nn.RReLU(),
+        torch.nn.BatchNorm1d(10),
+        torch.nn.Linear(10,1)
+
+    )
     loss_fn = torch.nn.MSELoss(size_average=False)
 
     model.cuda()
