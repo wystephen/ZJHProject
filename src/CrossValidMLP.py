@@ -50,12 +50,12 @@ if __name__ == '__main__':
     tensor_board_writer = SummaryWriter()
 
     dl = DataLoder.ZJHDataset()
-    train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.2)
+    train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.00002)
 
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
           test_x.shape, test_y.shape)
-    t_batch_size = train_x.shape[0]
+    t_batch_size = 5000#train_x.shape[0]
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
