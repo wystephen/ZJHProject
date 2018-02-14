@@ -46,8 +46,9 @@ from tensorboardX import SummaryWriter
 if __name__ == '__main__':
     # vis = Visdom()
     # vis.text('hello word!')
-    visual = visualize.Visualizer(env='main' + time.asctime(time.localtime(time.time())))
+    # visual = visualize.Visualizer(env='main' + time.asctime(time.localtime(time.time())))
     tensor_board_writer = SummaryWriter()
+    time_stamp_str = time.asctime(time.localtime(time.time()))
 
     dl = DataLoder.ZJHDataset()
     train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.00002)
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
           test_x.shape, test_y.shape)
-    t_batch_size = 5000#train_x.shape[0]
+    t_batch_size = 5000  # train_x.shape[0]
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
@@ -73,38 +74,38 @@ if __name__ == '__main__':
     test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
 
     model = torch.nn.Sequential(torch.nn.Linear(8, 40),
-                                torch.nn.ELU(),
+                                torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 40),
                                 torch.nn.Dropout(0.2),
-                                torch.nn.ELU(),
+                                torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(40),
-                                torch.nn.Linear(40, 40),
-                                torch.nn.Dropout(0.2),
-                                torch.nn.ELU(),
-                                torch.nn.BatchNorm1d(40),
-                                torch.nn.Linear(40, 40),
-                                torch.nn.ELU(),
-                                torch.nn.BatchNorm1d(40),
+                                # torch.nn.Linear(40, 40),
+                                # torch.nn.Dropout(0.2),
+                                # torch.nn.RReLU(),
+                                # torch.nn.BatchNorm1d(40),
+                                # torch.nn.Linear(40, 40),
+                                # torch.nn.RReLU(),
+                                # torch.nn.BatchNorm1d(40),
+                                # torch.nn.Linear(40, 20),
+                                # torch.nn.Dropout(0.2),
+                                # torch.nn.RReLU(),
+                                # torch.nn.BatchNorm1d(20),
+                                # torch.nn.Linear(20, 20),
+                                # torch.nn.RReLU(),
+                                # torch.nn.BatchNorm1d(20),
+                                # torch.nn.Linear(20, 20),
+                                # torch.nn.RReLU(),
+                                # torch.nn.BatchNorm1d(20),
+                                # torch.nn.Linear(20, 40),
+                                # torch.nn.RReLU(),
                                 torch.nn.Linear(40, 20),
-                                torch.nn.Dropout(0.2),
-                                torch.nn.ELU(),
+                                torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(20),
                                 torch.nn.Linear(20, 20),
-                                torch.nn.ELU(),
-                                torch.nn.BatchNorm1d(20),
-                                torch.nn.Linear(20, 20),
-                                torch.nn.ELU(),
-                                torch.nn.BatchNorm1d(20),
-                                torch.nn.Linear(20, 40),
-                                torch.nn.ELU(),
-                                torch.nn.Linear(40, 20),
-                                torch.nn.ELU(),
-                                torch.nn.BatchNorm1d(20),
-                                torch.nn.Linear(20, 20),
-                                torch.nn.ELU(),
+                                torch.nn.RReLU(),
                                 torch.nn.Linear(20, 10),
-                                torch.nn.ELU(),
+                                torch.nn.RReLU(),
                                 torch.nn.Linear(10, 1)
                                 )
 
@@ -149,18 +150,21 @@ if __name__ == '__main__':
 
         # test_r2 = metrics.r2_score(test_y.cpu().data.numpy(),
         #                            model(test_x).cpu().data.numpy())
-        visual.plot('train_r2', train_r2)
-        visual.plot('valid_r2', valid_r2)
+        # visual.plot('train_r2', train_r2)
+        # visual.plot('valid_r2', valid_r2)
         # visual.plot('test_r2',test_r2)
-        visual.plot('train_loss', train_loss)
-        visual.plot('valid_loss', valid_loss)
-        max_train_r2 = max(max_train_r2,train_r2)
-        max_valid_r2 = max(max_valid_r2,valid_r2)
+        # visual.plot('train_loss', train_loss)
+        # visual.plot('valid_loss', valid_loss)
+        if (max_train_r2 < train_r2):
+            torch.save(model, './local_model/' + time_stamp_str)
+            model.cuda()
+        max_train_r2 = max(max_train_r2, train_r2)
+        max_valid_r2 = max(max_valid_r2, valid_r2)
         print(epoch, ':{', 'train r2:', train_r2,
-              ',max train r2:',max_train_r2,
+              ',max train r2:', max_train_r2,
               ',train loss:', train_loss,
               ',valid_r2:', valid_r2,
-              ',max valid r2:',max_valid_r2,
+              ',max valid r2:', max_valid_r2,
               ',valid loss:', valid_loss, '}')
         tensor_board_writer.add_scalars('data/MSE',
                                         {
@@ -174,5 +178,10 @@ if __name__ == '__main__':
                                             'validr2': valid_r2
                                         },
                                         epoch)
+        for name, param in model.named_parameters():
+            tensor_board_writer.add_histogram(
+                name, param.clone().cpu().data.numpy(),
+                epoch
+            )
 
-        model.train()
+            model.train()
