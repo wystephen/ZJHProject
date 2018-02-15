@@ -102,8 +102,8 @@ if __name__ == '__main__':
                                 torch.nn.Linear(40, 20),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(20),
-                                # torch.nn.Linear(20, 20),
-                                # torch.nn.RReLU(),
+                                torch.nn.Linear(20, 20),
+                                torch.nn.RReLU(),
                                 torch.nn.Linear(20, 10),
                                 torch.nn.RReLU(),
                                 torch.nn.Linear(10, 1)
