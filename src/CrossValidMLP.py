@@ -114,8 +114,10 @@ if __name__ == '__main__':
     model.cuda()
     loss_fn.cuda()
     loss_array = np.zeros(1000000)
-    # optimizer = torch.optim.Adam(model.parameters())
-    optimizer = torch.optim.SGD(model.parameters(),lr=0.0001,momentum=0.05)
+    optimizer = torch.optim.Adam(model.parameters())
+    # optimizer = torch.optim.SGD(model.parameters(),
+    #                             lr=0.00001,
+    #                             momentum=0.05)
     # optimizer = torch.optim.RMSprop(model.parameters())
     max_train_r2 = 0.0
     max_valid_r2 = 0.0
