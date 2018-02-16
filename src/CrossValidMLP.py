@@ -56,7 +56,7 @@ if __name__ == '__main__':
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
           test_x.shape, test_y.shape)
-    t_batch_size = 5000  # train_x.shape[0]
+    t_batch_size = 100  # train_x.shape[0]
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
@@ -73,18 +73,20 @@ if __name__ == '__main__':
     test_x = Variable(FloatTensor(test_x)).cuda()
     test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
 
-    model = torch.nn.Sequential(torch.nn.Linear(8, 40),
+    model = torch.nn.Sequential(torch.nn.Linear(8, 80),
+                                # torch.nn.Dropout(0.5),
                                 torch.nn.RReLU(),
-                                torch.nn.BatchNorm1d(40),
-                                torch.nn.Linear(40, 40),
-                                torch.nn.Dropout(0.2),
+                                torch.nn.BatchNorm1d(80),
+                                torch.nn.Linear(80, 80),
+                                # torch.nn.Dropout(0.5),
                                 torch.nn.RReLU(),
-                                torch.nn.BatchNorm1d(40),
+                                torch.nn.BatchNorm1d(80),
                                 # torch.nn.Linear(40, 40),
                                 # torch.nn.Dropout(0.2),
                                 # torch.nn.RReLU(),
                                 # torch.nn.BatchNorm1d(40),
-                                torch.nn.Linear(40, 40),
+                                torch.nn.Linear(80, 40),
+                                # torch.nn.Dropout(0.5),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(40),
                                 # torch.nn.Linear(40, 20),
@@ -94,15 +96,16 @@ if __name__ == '__main__':
                                 # torch.nn.Linear(20, 20),
                                 # torch.nn.RReLU(),
                                 # torch.nn.BatchNorm1d(20),
-                                # torch.nn.Linear(20, 20),
-                                # torch.nn.RReLU(),
-                                # torch.nn.BatchNorm1d(20),
-                                # torch.nn.Linear(20, 40),
-                                # torch.nn.RReLU(),
+                                torch.nn.Linear(40, 20),
+                                torch.nn.RReLU(),
+                                torch.nn.BatchNorm1d(20),
+                                torch.nn.Linear(20, 40),
+                                torch.nn.RReLU(),
                                 torch.nn.Linear(40, 20),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(20),
                                 torch.nn.Linear(20, 20),
+                                torch.nn.Dropout(0.5),
                                 torch.nn.RReLU(),
                                 torch.nn.Linear(20, 10),
                                 torch.nn.RReLU(),
@@ -119,6 +122,7 @@ if __name__ == '__main__':
     #                             lr=0.00001,
     #                             momentum=0.05)
     # optimizer = torch.optim.RMSprop(model.parameters())
+    # optimizer = torch.optim.Adadelta(model.parameters())
     max_train_r2 = 0.0
     max_valid_r2 = 0.0
     min_train_loss = 100000000.0
