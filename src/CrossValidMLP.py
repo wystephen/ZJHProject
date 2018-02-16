@@ -74,28 +74,15 @@ if __name__ == '__main__':
     test_y = Variable(FloatTensor(test_y.reshape([-1, 1]))).cuda()
 
     model = torch.nn.Sequential(torch.nn.Linear(8, 80),
-                                # torch.nn.Dropout(0.5),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(80),
                                 torch.nn.Linear(80, 80),
-                                # torch.nn.Dropout(0.5),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(80),
-                                # torch.nn.Linear(40, 40),
-                                # torch.nn.Dropout(0.2),
-                                # torch.nn.RReLU(),
-                                # torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(80, 40),
-                                # torch.nn.Dropout(0.5),
+                                torch.nn.Dropout(0.8),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(40),
-                                # torch.nn.Linear(40, 20),
-                                # torch.nn.Dropout(0.2),
-                                # torch.nn.RReLU(),
-                                # torch.nn.BatchNorm1d(20),
-                                # torch.nn.Linear(20, 20),
-                                # torch.nn.RReLU(),
-                                # torch.nn.BatchNorm1d(20),
                                 torch.nn.Linear(40, 20),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(20),
@@ -112,16 +99,17 @@ if __name__ == '__main__':
                                 torch.nn.Linear(10, 1)
                                 )
 
+
     loss_fn = torch.nn.MSELoss(size_average=False)
 
     model.cuda()
     loss_fn.cuda()
     loss_array = np.zeros(1000000)
-    optimizer = torch.optim.Adam(model.parameters())
+    # optimizer = torch.optim.Adam(model.parameters())
     # optimizer = torch.optim.SGD(model.parameters(),
     #                             lr=0.00001,
     #                             momentum=0.05)
-    # optimizer = torch.optim.RMSprop(model.parameters())
+    optimizer = torch.optim.RMSprop(model.parameters())
     # optimizer = torch.optim.Adadelta(model.parameters())
     max_train_r2 = 0.0
     max_valid_r2 = 0.0
