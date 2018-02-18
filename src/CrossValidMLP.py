@@ -99,7 +99,6 @@ if __name__ == '__main__':
                                 torch.nn.Linear(10, 1)
                                 )
 
-
     loss_fn = torch.nn.MSELoss(size_average=False)
 
     model.cuda()
