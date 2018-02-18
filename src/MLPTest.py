@@ -47,10 +47,9 @@ if __name__ == '__main__':
     # all_x_data = dl.normlized_data[:, 1:]
     # all_y_data = dl.normlized_data[:, 0]
     # all_y_data = all_y_data.reshape([-1, 1])
-    all_x_data,all_y_data,vx,vy,tx,ty =dl.getTrainValidTest(0.95,0.001,0.001)
+    all_x_data, all_y_data, vx, vy, tx, ty = dl.getTrainValidTest(0.95, 0.001, 0.001)
     print(dl.normlized_data.shape)
-    print(all_x_data.shape,all_y_data.shape)
-
+    print(all_x_data.shape, all_y_data.shape)
 
     print(all_x_data.shape)
     model = torch.nn.Sequential(torch.nn.Linear(8, 20),
