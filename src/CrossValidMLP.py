@@ -56,7 +56,7 @@ if __name__ == '__main__':
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
           test_x.shape, test_y.shape)
-    t_batch_size = 100  # train_x.shape[0]
+    t_batch_size = 1000  # train_x.shape[0]
 
     train_loader = DataLoader(TensorDataset(data_tensor=FloatTensor(train_x),
                                             target_tensor=FloatTensor(train_y.reshape([-1, 1]))),
