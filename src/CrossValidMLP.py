@@ -92,7 +92,7 @@ if __name__ == '__main__':
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 20),
-                                torch.nn.Dropout(0.2),
+                                torch.nn.Dropout(0.8),
                                 torch.nn.RReLU(),
                                 torch.nn.Linear(20, 10),
                                 torch.nn.RReLU(),
