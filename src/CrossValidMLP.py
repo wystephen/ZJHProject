@@ -173,10 +173,10 @@ if __name__ == '__main__':
                                             'validr2': valid_r2
                                         },
                                         epoch)
-        for name, param in model.named_parameters():
-            tensor_board_writer.add_histogram(
-                name, param.clone().cpu().data.numpy(),
-                epoch
-            )
+        # for name, param in model.named_parameters():
+        #     tensor_board_writer.add_histogram(
+        #         name, param.clone().cpu().data.numpy(),
+        #         epoch
+        #     )
 
-            model.train()
+        model.train()
