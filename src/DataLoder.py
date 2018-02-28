@@ -42,8 +42,8 @@ class ZJHDataset:
         tmp_mean = self.data.mean(axis=0)
         self.normlized_data = self.data - tmp_mean
         self.normlized_data = self.normlized_data / self.normlized_data.std(axis=0)
-        print(self.data.mean(axis=0))
-        print(self.data.std(axis=0))
+        print('data mean',self.data.mean(axis=0))
+        print('data std:', self.data.std(axis=0))
         print(self.normlized_data.mean(axis=0))
         print(self.normlized_data.std(axis=0))
         # self.normlized_data = self.data
