@@ -63,6 +63,11 @@ class ResFcNet(object):
 
 
 
-    def __init_(self,input_size,output_size,Layer_size=[10,10]):
+    def __init_(self,input_size,output_size,Layer_size=[10,-1,10]):
         self.layer_list = list()
+
+
+        # for s in Layer_size:
+        #     if s = -1
+
 
