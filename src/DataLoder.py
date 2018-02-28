@@ -42,8 +42,9 @@ class ZJHDataset:
         tmp_mean = self.data.mean(axis=0)
         self.normlized_data = self.data - tmp_mean
         self.normlized_data = self.normlized_data / self.normlized_data.std(axis=0)
-        print('data mean',self.data.mean(axis=0))
+        print('data mean', self.data.mean(axis=0))
         print('data std:', self.data.std(axis=0))
+        print('data range:', self.data.max(axis=0) - self.data.min(axis=0))
         print(self.normlized_data.mean(axis=0))
         print(self.normlized_data.std(axis=0))
         # self.normlized_data = self.data
@@ -65,6 +66,30 @@ class ZJHDataset:
 
         tvx, test_x, tvy, test_y = \
             train_test_split(self.normlized_data[:, 1:],
+                             self.normlized_data[:, 0],
+                             shuffle=True,
+                             test_size=test_rate
+                             )
+        train_x, valid_x, train_y, valid_y = train_test_split(
+            tvx, tvy,
+            shuffle=True,
+            test_size=valid_rate / (1 - test_rate)
+        )
+
+        return train_x, train_y, valid_x, valid_y, test_x, test_y
+
+    def getTrainValidTestMasked(self, train_rate, valid_rate, test_rate):
+        train_rate = float(train_rate)
+        valid_rate = float(valid_rate)
+        test_rate = float(test_rate)
+        if (train_rate + valid_rate + test_rate) > 1.0:
+            sum = train_rate + valid_rate + test_rate
+            train_rate = train_rate / sum
+            valid_rate = valid_rate / sum
+            test_rate = test_rate / sum
+
+        tvx, test_x, tvy, test_y = \
+            train_test_split(self.normlized_data[:, 1:-3],
                              self.normlized_data[:, 0],
                              shuffle=True,
                              test_size=test_rate
