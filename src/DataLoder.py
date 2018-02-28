@@ -55,6 +55,13 @@ class ZJHDataset:
     # def __len__(self):
     #     return self.normlized_data.shape[0]
     def getTrainValidTest(self, train_rate, valid_rate, test_rate):
+        '''
+
+        :param train_rate:
+        :param valid_rate:
+        :param test_rate:
+        :return:
+        '''
         train_rate = float(train_rate)
         valid_rate = float(valid_rate)
         test_rate = float(test_rate)
@@ -79,6 +86,13 @@ class ZJHDataset:
         return train_x, train_y, valid_x, valid_y, test_x, test_y
 
     def getTrainValidTestMasked(self, train_rate, valid_rate, test_rate):
+        '''
+        split data into difference group.
+        :param train_rate:
+        :param valid_rate:
+        :param test_rate:
+        :return:
+        '''
         train_rate = float(train_rate)
         valid_rate = float(valid_rate)
         test_rate = float(test_rate)
@@ -89,7 +103,7 @@ class ZJHDataset:
             test_rate = test_rate / sum
 
         tvx, test_x, tvy, test_y = \
-            train_test_split(self.normlized_data[:, 1:-3],
+            train_test_split(self.normlized_data[:, 1:-1],
                              self.normlized_data[:, 0],
                              shuffle=True,
                              test_size=test_rate

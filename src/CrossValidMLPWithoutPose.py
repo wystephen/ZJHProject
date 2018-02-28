@@ -51,8 +51,8 @@ if __name__ == '__main__':
     time_stamp_str = time.asctime(time.localtime(time.time()))
 
     dl = DataLoder.ZJHDataset()
-    # train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.00002)
-    train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTestMasked(0.6, 0.2, 0.00002)
+    train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.00002)
+    # train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTestMasked(0.6, 0.2, 0.00002)
 
     print(train_x.shape, train_y.shape,
           valid_x.shape, valid_y.shape,
@@ -85,9 +85,9 @@ if __name__ == '__main__':
                                 # torch.nn.Dropout(0.2),
                                 # torch.nn.RReLU(),
                                 # torch.nn.BatchNorm1d(40),
-                                torch.nn.Linear(40, 40),
-                                torch.nn.RReLU(),
-                                torch.nn.BatchNorm1d(40),
+                                # torch.nn.Linear(40, 40),
+                                # torch.nn.RReLU(),
+                                # torch.nn.BatchNorm1d(40),
                                 # torch.nn.Linear(40, 20),
                                 # torch.nn.Dropout(0.2),
                                 # torch.nn.RReLU(),

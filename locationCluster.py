@@ -27,10 +27,26 @@ import numpy  as np
 import scipy as sp
 import matplotlib.pyplot as plt
 
+from scipy.spatial.distance import  pdist
+
 from src import DataLoder
 from sklearn.cluster import KMeans
 
 if __name__ == '__main__':
     dl = DataLoder.ZJHDataset()
     pose_data = dl.data[:,-3:-1]
-    print(pose_data)
+    value_data = dl.data[:,0]
+    # print(pose_data)
+    time_data = dl.data[:,-1]
+
+    plt.figure()
+    plt.plot(pose_data[:,0],pose_data[:,1],'*r')
+    plt.show()
+
+    # plt.figure()
+    # plt.plot(time_data,'*-r')
+    # plt.show()
+    n_cluster = 10
+    k_means = KMeans()
+
+
