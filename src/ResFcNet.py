@@ -24,22 +24,21 @@
 '''
 
 import torch
-from torch import  nn
+from torch import nn
 
 
 class ResBlock(nn.Module):
 
-    def __init__(self,in_size):
+    def __init__(self, in_size):
         super(ResBlock, self).__init__()
 
-        self.fc1 = nn.Linear(in_size,in_size)
+        self.fc1 = nn.Linear(in_size, in_size)
         self.bn1 = nn.BatchNorm1d(in_size)
         self.relu = nn.RReLU(inplace=True)
 
-        self.fc2 = nn.Linear(in_size,in_size)
+        self.fc2 = nn.Linear(in_size, in_size)
         self.bn2 = nn.BatchNorm1d(in_size)
         # self.relu2 = nn.RReLU(inplace=True)
-
 
     def forward(self, x):
         residual = x
@@ -51,23 +50,10 @@ class ResBlock(nn.Module):
         return out
 
 
-
-
-
-
-
-
-
-
 class ResFcNet(object):
 
-
-
-    def __init_(self,input_size,output_size,Layer_size=[10,-1,10]):
+    def __init_(self, input_size, output_size, Layer_size=[10, -1, 10]):
         self.layer_list = list()
-
 
         # for s in Layer_size:
         #     if s = -1
-
-
