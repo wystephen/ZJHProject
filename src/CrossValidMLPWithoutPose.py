@@ -44,7 +44,7 @@ import time
 
 from tensorboardX import SummaryWriter
 
-from visualdl import LogWriter
+# from visualdl import LogWriter
 
 if __name__ == '__main__':
     # vis = Visdom()
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     time_stamp_str = time.asctime(time.localtime(time.time()))
 
     logdir='./'
-    logger = LogWriter(logdir,sync_cycle=100)
+    # logger = LogWriter(logdir,sync_cycle=100)
 
     dl = DataLoder.ZJHDataset()
     train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.2)
