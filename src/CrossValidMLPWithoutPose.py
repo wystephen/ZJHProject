@@ -26,6 +26,7 @@ import torch
 from torch.autograd import Variable
 from torch import FloatTensor
 from torch.utils.data import *
+import torch.onnx
 
 from sklearn import metrics
 
@@ -43,6 +44,8 @@ import time
 
 from tensorboardX import SummaryWriter
 
+from visualdl import LogWriter
+
 if __name__ == '__main__':
     # vis = Visdom()
     # vis.text('hello word!')
@@ -50,8 +53,11 @@ if __name__ == '__main__':
     tensor_board_writer = SummaryWriter()
     time_stamp_str = time.asctime(time.localtime(time.time()))
 
+    logdir='./'
+    logger = LogWriter(logdir,sync_cycle=100)
+
     dl = DataLoder.ZJHDataset()
-    train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.00002)
+    train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTest(0.6, 0.2, 0.2)
     # train_x, train_y, valid_x, valid_y, test_x, test_y = dl.getTrainValidTestMasked(0.6, 0.2, 0.00002)
 
     print(train_x.shape, train_y.shape,
@@ -84,6 +90,22 @@ if __name__ == '__main__':
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 40),
+                                torch.nn.RReLU(),
+                                torch.nn.BatchNorm1d(40),
+                                torch.nn.Linear(40, 40),
+                                torch.nn.Dropout(0.2),
+                                torch.nn.RReLU(),
+                                torch.nn.BatchNorm1d(40),
+                                torch.nn.Linear(40, 40),
+                                torch.nn.Dropout(0.2),
+                                torch.nn.RReLU(),
+                                torch.nn.BatchNorm1d(40),
+                                torch.nn.Linear(40, 40),
+                                torch.nn.Dropout(0.2),
+                                torch.nn.RReLU(),
+                                torch.nn.BatchNorm1d(40),
+                                torch.nn.Linear(40, 40),
+                                torch.nn.Dropout(0.2),
                                 torch.nn.RReLU(),
                                 torch.nn.BatchNorm1d(40),
                                 torch.nn.Linear(40, 40),
